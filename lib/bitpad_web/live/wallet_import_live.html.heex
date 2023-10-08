@@ -1,0 +1,17 @@
+<div>
+  <.simple_form
+  for={@form}
+  id="import_wallet_form"
+  phx-submit="import"
+  >
+  <.input field={@form[:name]} type="text" placeholder="Wallet name" phx-debounce required/>
+  <.input field={@form[:wif]} type="text" placeholder="Wallet wif" phx-debounce required/>
+
+
+  <.button type="submit" class="contrast">Generate</.button>
+  </.simple_form>
+</div>
+
+<.link navigate={Helpers.user_me_path(@socket, :show)} class="secondary outline">Back</.link>
+
+

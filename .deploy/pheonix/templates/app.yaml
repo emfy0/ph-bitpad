@@ -1,0 +1,63 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.appName }}-sqlite
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.app.sqlite.size }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appName }}-pheonix
+  labels:
+    app: {{ .Values.appName }}
+spec:
+  ports:
+    - port: 4000
+  selector:
+    app: {{ .Values.appName }}
+    tier: pheonix
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}-rails
+  lables: {{ .Values.appName }}
+spec:
+  volumes:
+    - name: {{ .Values.appName }}-sqlite
+      persistentVolumeClaim:
+        claimName: {{ .Values.appName }}-sqlite
+  replicas: 1
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+      tier: pheonix
+  template:
+    metadata:
+      name: {{ .Values.appName }}-pheonix
+      labels:
+        app: {{ .Values.appName }}
+        tier: pheonix
+        date: "{{ now | unixEpoch }}"
+    spec:
+      containers:
+      - name: {{ .Values.appName }}-pheonix
+        image: {{ .Values.app.image }}
+        env:
+        {{- include "app.env" . | nindent 8 }}
+        ports:
+        - containerPort: 4000
+        volumeMounts:
+        - mountPath: {{ .Values.app.sqlite.path }}
+          name: {{ .Values.appName }}-sqlite

@@ -1,0 +1,82 @@
+<.modal id="create-wallet-modal" title="Add new wallet">
+  <.link
+    navigate={~p"/wallets/import"}
+    role="button"
+    class="contrast outline"
+    style="width: 100%; margin-bottom: 10px;"
+  >
+    Import wallet
+  </.link>
+
+  <.link
+    navigate={~p"/wallets/generate"}
+    role="button"
+    class="contrast outline"
+    style="width: 100%"
+  >
+    Generate wallet
+  </.link>
+</.modal>
+
+<.modal id="broadcast-transaction" title="Make transaction">
+  <.form
+    class="broadcast-transaction"
+    phx-submit="broadcast-transaction"
+    phx-change="broadcast-transaction-validate"
+    for={@broadcast_transaction_form}
+    as={:broadcast_transaction_form}
+  >
+  
+    <.label for="recipient_address">
+      Recipient address
+    </.label>
+    <.input field={@broadcast_transaction_form[:recipient_address]} type="text" placeholder="Recipient address" phx-debounce required/>
+    <.label for="recipient_address">
+      Volume to send
+    </.label>
+    <.input field={@broadcast_transaction_form[:volume]} type="number" placeholder="Transaction amount in satoshi" min="0" phx-debounce required/>
+
+
+    <.label for="fee_rate" class="inlined">
+      Fee rate
+    </.label>
+    <b style="margin-left: 0.5rem" :if={assigns[:selected_wallet]}>
+      <% { fee_rate, _ } = Float.parse("#{@broadcast_transaction_form[:fee_rate].value || 1}") %>
+      <% bytes = @selected_wallet.next_transaction_bytes || 0 %>
+
+      <%= fee_rate %> sat/byte ~ <%= fee_rate * bytes %> sats
+    </b>
+    <.input field={@broadcast_transaction_form[:fee_rate]} type="range" min="0.5" max="2" step="0.5" value="1" phx-debounce required/>
+
+    <.button type="submit" class="contrast">
+      Pay
+    </.button>
+  </.form>
+</.modal>
+
+<div class="grid">
+  <strong class="standart_color h2">
+    Your wallets
+  </strong>
+
+  <div style="justify-self: end;">
+    <a role="button" href="#" phx-click={show_modal("create-wallet-modal")}> + </a>
+  </div>
+</div>
+
+
+<div style="margin-top: 2rem;">
+  <%= if assigns[:loading_wallets] do %>
+    <div style="display: grid; justify-items: center;">
+      <div aria-busy="true" >
+      </div>
+    </div>
+  <% else %>
+    <.live_component
+      module={BitpadWeb.WalletComponent}
+      wallets={@wallets}
+      id={"wallets"}
+    />
+  <% end %>
+</div>
+

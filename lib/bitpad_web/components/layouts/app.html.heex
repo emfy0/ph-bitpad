@@ -1,0 +1,32 @@
+<%= if assigns[:hide_navbar] != true do %>
+  <div class="container">
+    <nav>
+      <ul>
+        <li>
+          <strong>
+            <.link href={~p"/users/me"} class="standart_color h2">Bitpad</.link>
+          </strong>
+        </li>
+      </ul>
+
+      <ul>
+        <%= if @current_user do %>
+          <li>
+            <.link href={~p"/auth/sign_out"} method="delete">Sign out</.link>
+          </li>
+        <% else %>
+          <li>
+            <.link href={~p"/auth/sign_up"}>Sign up</.link>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+<% end %>
+
+<.flash_group flash={@flash} />
+
+<main class="container p-2">
+  <%= @inner_content %>
+</main>
+

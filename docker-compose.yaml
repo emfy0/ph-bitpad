@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    command: bin/server
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    environment:
+      SECRET_KEY_BASE: 
+      DATABASE_PATH: 

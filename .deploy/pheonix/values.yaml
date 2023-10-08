@@ -1,0 +1,18 @@
+appName: bitpad-ph
+
+migration:
+  enabled: true
+  command: ["bin/bitpad eval 'Bitpad.Release.setup'"]
+
+ingress:
+  hostname: ph.bitpad.ru
+
+app:
+  sqlite:
+    size: 2Gi
+    path: "/app/database/bitpad.db"
+  image: ghcr.io/emfy0/ph-bitpad:latest
+  secrets:
+    secretKeyBase:
+      name: secret-key-base
+      key: secret-key-base

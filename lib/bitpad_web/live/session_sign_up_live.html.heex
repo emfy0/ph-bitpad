@@ -1,0 +1,48 @@
+<article class="grid">
+  <div>
+    <hgroup>
+      <h1>
+        Sign up
+      </h1>
+
+      <h2>
+        Fill in the fields below.
+      </h2>
+    </hgroup>
+
+    <.simple_form
+      for={@form}
+      id="sign_up_form"
+      phx-change="validate"
+      phx-submit="submit"
+      phx-trigger-action={@trigger_submit}
+      action={~p"/auth/sign_in?_action=registered"}
+      method="post"
+    >
+      <.input field={@form[:login]} type="text" placeholder="Login" phx-debounce required/>
+      <.input field={@form[:token]} type="text" placeholder="Token"  phx-debounce required/>
+
+      <.button class="secondary mt-2" type="button" phx-click="generate_token">
+        Generate password
+      </.button>
+
+      <.button type="submit" class="contrast">Register</.button>
+
+      <div class="grid" style="justify-items: center;">
+        <div>
+          <span>
+            Already have an account?
+          </span>
+
+          <.link navigate={Helpers.session_sign_in_path(@socket, :new)}>
+            Sign in!
+          </.link>
+        </div>
+      </div>
+    </.simple_form>
+  </div>
+
+  <div>
+    <img src={static_path(@socket, ~p"/images/logo.svg")} alt="Logo"/>
+  </div>
+</article>
