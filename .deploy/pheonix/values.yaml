@@ -10,7 +10,8 @@ ingress:
 app:
   sqlite:
     size: 2Gi
-    path: "/app/database/bitpad.db"
+    path: "/app/database"
+    filename: "bitpad.db"
   image: ghcr.io/emfy0/ph-bitpad:latest
   secrets:
     secretKeyBase:

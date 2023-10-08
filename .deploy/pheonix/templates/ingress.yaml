@@ -15,7 +15,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Values.appName }}-rails
+            name: {{ .Values.appName }}-pheonix
             port: 
               number: 4000
   tls:

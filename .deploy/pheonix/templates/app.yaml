@@ -25,13 +25,9 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-rails
+  name: {{ .Values.appName }}-pheonix
   lables: {{ .Values.appName }}
 spec:
-  volumes:
-    - name: {{ .Values.appName }}-sqlite
-      persistentVolumeClaim:
-        claimName: {{ .Values.appName }}-sqlite
   replicas: 1
   minReadySeconds: 5
   strategy:
@@ -51,6 +47,10 @@ spec:
         tier: pheonix
         date: "{{ now | unixEpoch }}"
     spec:
+      volumes:
+        - name: {{ .Values.appName }}-sqlite
+          persistentVolumeClaim:
+            claimName: {{ .Values.appName }}-sqlite
       containers:
       - name: {{ .Values.appName }}-pheonix
         image: {{ .Values.app.image }}
