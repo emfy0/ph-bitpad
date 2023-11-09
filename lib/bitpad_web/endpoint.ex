@@ -6,6 +6,7 @@ defmodule BitpadWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
+    max_age: 24*60*60*37, # 37 days
     key: "_bitpad_key",
     signing_salt: "q4037iI/",
     encryption_salt: "yvz1Q4Q/",
