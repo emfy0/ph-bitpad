@@ -46,9 +46,12 @@
 
       <%= fee_rate %> sat/byte ~ <%= fee_rate * bytes %> sats
     </b>
-    <.input field={@broadcast_transaction_form[:fee_rate]} type="range" min="0.5" max="2" step="0.5" value="1" phx-debounce required/>
+    <.input field={@broadcast_transaction_form[:fee_rate]} type="range" min="0.5" max="2" step="0.5" value={@broadcast_transaction_form[:fee_rate].value || 1} phx-debounce required/>
 
-    <.input field={@broadcast_transaction_form[:broadcast]} type="checkbox" value="true" required/>
+    <.label for="broadcast">
+      Broadcast transaction
+    </.label>
+    <.input field={@broadcast_transaction_form[:broadcast]} type="checkbox" value={@broadcast_transaction_form[:broadcast].value || "true"}/>
 
     <.button type="submit" class="contrast">
       Pay

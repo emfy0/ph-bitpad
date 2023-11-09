@@ -29,9 +29,9 @@ defmodule Bitpad.Operations.Wallets.BroadcastTransaction do
         {:ok, tx} = build_transaction(wallet, private_key, volume, fee_rate, recipient_address)
 
         if broadcast do
-          {:broadcasted, Mempool.broadcast_transaction(tx)} # tx_id here
+          {:ok, {:broadcasted, Mempool.broadcast_transaction(tx)}} # tx_id here
         else
-          {:print, tx}
+          {:ok, {:print, tx}}
         end
       {:error, error} ->
         {:error, error}
