@@ -52,7 +52,7 @@ defmodule BitpadWeb.UserMeLive do
       socket.assigns.user_token,
       transaction_from_params
     ) do
-      {:ok, tx_id} ->
+      {:broadcast, tx_id} ->
         send_update(ModalComponent, id: "broadcast-transaction", oppened: false, outside: true)
 
         {
@@ -60,6 +60,16 @@ defmodule BitpadWeb.UserMeLive do
           socket
           |> assign(broadcast_transaction_form: to_form(%{}, as: "broadcast-transaction-from"))
           |> put_flash(:info, "Transaction #{tx_id} broadcasted")
+        }
+
+      {:print, tx_hex} ->
+        send_update(ModalComponent, id: "broadcast-transaction", oppened: false, outside: true)
+
+        {
+          :noreply,
+          socket
+          |> assign(broadcast_transaction_form: to_form(%{}, as: "broadcast-transaction-from"))
+          |> assign(print_transaction: tx_hex)
         }
 
       {:error, error} ->

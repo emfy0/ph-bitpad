@@ -12,7 +12,8 @@ defmodule Bitpad.Operations.Wallets.BroadcastTransaction do
    %{
       recipient_address: recipient_address,
       volume: volume,
-      fee_rate: fee_rate
+      fee_rate: fee_rate,
+      broadcast: broadcast
     } = wallet_params
   ) do
   
@@ -27,7 +28,11 @@ defmodule Bitpad.Operations.Wallets.BroadcastTransaction do
       {:ok, _} ->
         {:ok, tx} = build_transaction(wallet, private_key, volume, fee_rate, recipient_address)
 
-        {:ok, Mempool.broadcast_transaction(tx)} # tx_id here
+        if broadcast do
+          {:broadcasted, Mempool.broadcast_transaction(tx)} # tx_id here
+        else
+          {:print, tx}
+        end
       {:error, error} ->
         {:error, error}
     end

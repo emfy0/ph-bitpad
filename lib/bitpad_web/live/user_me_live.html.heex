@@ -48,11 +48,21 @@
     </b>
     <.input field={@broadcast_transaction_form[:fee_rate]} type="range" min="0.5" max="2" step="0.5" value="1" phx-debounce required/>
 
+    <.input field={@broadcast_transaction_form[:broadcast]} type="checkbox" value="true" required/>
+
     <.button type="submit" class="contrast">
       Pay
     </.button>
   </.form>
 </.modal>
+
+<%= if assigns[:print_transaction] do %>
+  <div class="grid">
+    <pre>
+      <%= assigns[:print_transaction] %>
+    </pre>
+  </div>
+<% end %>
 
 <div class="grid">
   <strong class="standart_color h2">
