@@ -32,11 +32,12 @@ defmodule Bitpad.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
   [
+      {:datacaster, "~> 0.1.5"},
       {:httpoison, "~> 2.0"},
       {:bitcoinlib, "~> 0.4.7"},
       {:bcrypt_elixir, "~> 3.0"},
       {:ok, "~> 2.3"},
-      {:goal, "~> 0.3"},
+      # {:goal, "~> 0.3"},
       {:secure_random, "~> 0.5"},
       {:phoenix, "~> 1.7.7"},
       {:phoenix_ecto, "~> 4.4"},

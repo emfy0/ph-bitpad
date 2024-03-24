@@ -18,11 +18,13 @@ defmodule BitpadWeb.SessionSignUpLive do
   end
 
   def handle_event("validate", %{"user" => user_params}, socket) do
-    case Bitpad.Validations.Users.CreateSchema.validate(:create, user_params) do
+    case Bitpad.Validations.Users.CreateSchema.validate_to_changeset(:create, user_params) do
       {:ok, _} ->
+        IO.inspect("OK")
         {:noreply, assign(socket, form: to_form(user_params, as: "user"))}
   
       {:error, changeset} ->
+        IO.inspect(changeset)
         {:noreply, assign(socket, form: to_form(changeset, as: "user"))}
     end
   end

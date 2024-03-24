@@ -6,7 +6,7 @@ defmodule Bitpad.Transactions.Users.SignUp do
 
   def call(params) do
     OK.for do
-      user_params <- CreateSchema.validate(:create, params)
+      user_params <- CreateSchema.validate_to_changeset(:create, params)
       user <- Create.call(user_params)
     after
       user

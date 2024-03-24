@@ -6,7 +6,7 @@ defmodule Bitpad.Transactions.Wallets.Generate do
   
   def call(user, token, wallet_params) do
     OK.for do
-      generate_params <- GenerateSchema.validate(:generate, wallet_params)
+      generate_params <- GenerateSchema.validate_to_changeset(:generate, wallet_params)
       wallet <- Generate.call(generate_params, user, token)
     after
       wallet

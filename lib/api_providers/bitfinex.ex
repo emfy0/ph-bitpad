@@ -10,7 +10,7 @@ defmodule ApiProviders.Bitfinex do
       {:ok, %{body: body}} ->
         {result, _} =
           body
-          |> String.slice(1..-2)
+          |> String.slice(1..-2//1)
           |> Float.parse()
 
         result

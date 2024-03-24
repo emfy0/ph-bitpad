@@ -15,10 +15,10 @@ defmodule Bitpad.Operations.Wallets.Generate do
       |> BitcoinLib.Address.from_public_key(:p2pkh, :testnet)
 
     wallet_params
-    |> Map.put(:user_id, user.id)
-    |> Map.put(:encrypted_private_key, encrypt(token, wif))
-    |> Map.put(:hashed_id, SecureRandom.uuid())
-    |> Map.put(:address, address)
+    |> Map.put("user_id", user.id)
+    |> Map.put("encrypted_private_key", encrypt(token, wif))
+    |> Map.put("hashed_id", SecureRandom.uuid())
+    |> Map.put("address", address)
     |> Wallet.create_changeset()
     |> Repo.insert()
     |> case do

@@ -1,7 +1,5 @@
 defmodule Bitpad.Operations.Wallets.BroadcastTransaction do
-  alias Ecto.Changeset
   alias ApiProviders.Mempool
-  alias Bitpad.Entities.Wallet
   alias BitcoinLib.Transaction
 
   import Bitpad.Operations.Wallets.Encryptor
@@ -10,67 +8,22 @@ defmodule Bitpad.Operations.Wallets.BroadcastTransaction do
     wallet,
     user_token,
    %{
-      recipient_address: recipient_address,
-      volume: volume,
-      fee_rate: fee_rate,
-      broadcast: broadcast
-    } = wallet_params
+      "recipient_address" => recipient_address,
+      "volume" => volume,
+      "fee_rate" => fee_rate,
+      "broadcast" => broadcast
+    }
   ) do
   
     {:ok, private_key_wif} = decrypt(user_token, wallet.encrypted_private_key)
     private_key = BitcoinLib.Key.PrivateKey.from_wif(private_key_wif)
 
-    wallet =
-      wallet
-      |> Wallet.fill_provider_attrs()
+    {:ok, tx} = build_transaction(wallet, private_key, volume, fee_rate, recipient_address)
 
-    case validate(wallet, volume, fee_rate, recipient_address, wallet_params) do
-      {:ok, _} ->
-        {:ok, tx} = build_transaction(wallet, private_key, volume, fee_rate, recipient_address)
-
-        if broadcast do
-          {:ok, {:broadcasted, Mempool.broadcast_transaction(tx)}} # tx_id here
-        else
-          {:ok, {:print, tx}}
-        end
-      {:error, error} ->
-        {:error, error}
-    end
-  end
-
-  defp validate(wallet, volume, fee_rate, recipient_address, wallet_params) do
-    valid_addr = case BitcoinLib.Address.destructure(recipient_address) do
-      {status, _, _, network} ->
-        status == :ok && network == :testnet     
-      {:error, _} ->
-        false
-    end
-
-    cond do
-      wallet.balance < round(volume + fee_rate * wallet.next_transaction_bytes) ->
-        {
-          :error,
-          %Changeset{
-            valid?: false,
-            data: %{},
-            changes: wallet_params,
-            errors: [volume: {"Insufficient funds", []}],
-            action: :validate,
-          }
-        }
-      not valid_addr ->
-        {
-          :error,
-          %Changeset{
-            valid?: false,
-            data: %{},
-            changes: wallet_params,
-            errors: [recipient_address: {"Invalid recipient address", []}],
-            action: :validate,
-          }
-        }
-      true ->
-       {:ok, nil}
+    if broadcast do
+      {:ok, {:broadcasted, Mempool.broadcast_transaction(tx)}} # tx_id here
+    else
+      {:ok, {:print, tx}}
     end
   end
 

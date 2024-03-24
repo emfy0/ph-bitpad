@@ -1,7 +1,9 @@
 defmodule Bitpad.Validations.Wallets.GenerateSchema do
-  use Goal
+  use Datacaster.Contract
 
-  defparams :generate do
-    required :name, :string, min: 3, max: 20
+  define_schema(:generate) do
+    hash_schema(
+      name: non_empty_string() > check("length must be between 3 and 20", &(String.length(&1) in 3..20))
+    )
   end
 end
