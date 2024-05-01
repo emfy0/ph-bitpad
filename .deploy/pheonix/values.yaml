@@ -2,10 +2,10 @@ appName: bitpad-ph
 
 migration:
   enabled: true
-  command: ["bin/bitpad eval 'Bitpad.Release.setup'"]
+  command: ["/app/bin/setup"]
 
 ingress:
-  hostname: ph.bitpad.ru
+  hostname: bitpad.development-env.ru
 
 app:
   sqlite:

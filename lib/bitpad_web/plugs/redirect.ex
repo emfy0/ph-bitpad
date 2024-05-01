@@ -9,6 +9,7 @@ defmodule BitpadWeb.Redirect do
 
   def call(conn, opts) do
     conn
+    |> Plug.Conn.put_session(:telegram_web_app, opts[:telegram_web_app] || false)
     |> Phoenix.Controller.redirect(opts)
   end
 end

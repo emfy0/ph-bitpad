@@ -8,6 +8,8 @@ defmodule BitpadWeb.UserMeLive do
 
   def mount(_params, session, socket) do
     Process.send_after(self(), :update_wallets, 0)
+    Process.send_after(self(), :set_recommended_fee, 0)
+
     {
       :ok,
       socket
@@ -15,6 +17,7 @@ defmodule BitpadWeb.UserMeLive do
       |> assign(broadcast_transaction_form: to_form(%{}, as: "broadcast-transaction-from"))
       |> assign(loading_wallets: true)
       |> assign(selected_wallet: nil)
+      |> assign(recommended_fee: 1)
     }
   end
 
@@ -94,6 +97,16 @@ defmodule BitpadWeb.UserMeLive do
       socket
       |> assign(wallets: wallets)
       |> assign(loading_wallets: false)
+    }
+  end
+
+  def handle_info(:set_recommended_fee, socket) do
+    recommended_fee = ApiProviders.Mempool.recommended_fee()
+
+    {
+      :noreply,
+      socket
+      |> assign(recommended_fee: recommended_fee || socket.assigns.recommended_fee)
     }
   end
 end

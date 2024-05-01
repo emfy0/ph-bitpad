@@ -65,4 +65,17 @@ defmodule ApiProviders.Mempool do
         false
     end
   end
+
+  def recommended_fee do
+    url = @url <> "/v1/fees/recommended"
+
+    case HTTPoison.get(url) do
+      {:ok, %{body: json_body}} ->
+        body = Jason.decode!(json_body)
+
+        body["fastestFee"]
+      {:error, _} ->
+        nil
+    end
+  end
 end

@@ -22,6 +22,14 @@ defmodule BitpadWeb.Router do
 
     get "/", Redirect, to: "/users/me"
 
+    scope "/telegram-web-app" do
+      get "/", Redirect, to: "/users/me", telegram_web_app: true
+    end
+
+    scope "/telegram" do
+      get "/oauth_redirect", TelegramController, :oauth
+    end
+
     scope "/auth" do
       live_session :not_authenticated,
         on_mount: [
@@ -40,6 +48,7 @@ defmodule BitpadWeb.Router do
     live_session :ensure_current_user,
       on_mount: [
         {BitpadWeb.UserAuth, :ensure_current_user},
+        {BitpadWeb.UserAuth, :mount_telegram_web_app},
       ]
     do
       scope "/users" do

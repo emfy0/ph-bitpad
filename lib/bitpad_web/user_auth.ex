@@ -37,6 +37,10 @@ defmodule BitpadWeb.UserAuth do
     {:cont, mount_current_user(socket, session)}
   end
 
+  def on_mount(:mount_telegram_web_app, _, session, socket) do
+    {:cont, Phoenix.Component.assign_new(socket, :telegram_web_app, fn -> session["telegram_web_app"] || false end)}
+  end
+
   def mount_current_user(socket, session) do
     Phoenix.Component.assign_new(
       socket, :current_user,

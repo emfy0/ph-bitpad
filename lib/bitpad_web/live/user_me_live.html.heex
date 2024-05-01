@@ -19,6 +19,22 @@
 </.modal>
 
 <.modal id="broadcast-transaction" title="Make transaction">
+  <%= if @telegram_web_app do %>
+    <script>
+      function showQrForTransactionAddress() {
+        let tg = window.Telegram.WebApp
+
+        tg.showScanQrPopup("BTC Address", (data) => {
+          tg.closeScanQrPopup()
+
+          address = document.getElementById("broadcast-transaction-from_recipient_address")
+          address.value = data
+        })
+      }
+    </script>
+    <button onclick="showQrForTransactionAddress()"> QR </button>
+  <% end %>
+
   <.form
     class="broadcast-transaction"
     phx-submit="broadcast-transaction"
@@ -26,7 +42,7 @@
     for={@broadcast_transaction_form}
     as={:broadcast_transaction_form}
   >
-  
+
     <.label for="recipient_address">
       Recipient address
     </.label>
@@ -34,19 +50,18 @@
     <.label for="recipient_address">
       Volume to send
     </.label>
-    <.input field={@broadcast_transaction_form[:volume]} type="number" placeholder="Transaction amount in satoshi" min="0" phx-debounce required/>
-
+    <.input field={@broadcast_transaction_form[:volume]} type="text" placeholder="Transaction amount in BTC" min="0" phx-debounce required/>
 
     <.label for="fee_rate" class="inlined">
       Fee rate
     </.label>
     <b style="margin-left: 0.5rem" :if={assigns[:selected_wallet]}>
-      <% { fee_rate, _ } = Float.parse("#{@broadcast_transaction_form[:fee_rate].value || 1}") %>
+      <% { fee_rate, _ } = Float.parse("#{@broadcast_transaction_form[:fee_rate].value || @recommended_fee}") %>
       <% bytes = @selected_wallet.next_transaction_bytes || 0 %>
 
       <%= fee_rate %> sat/byte ~ <%= fee_rate * bytes %> sats
     </b>
-    <.input field={@broadcast_transaction_form[:fee_rate]} type="range" min="0.5" max="2" step="0.5" value={@broadcast_transaction_form[:fee_rate].value || 1} phx-debounce required/>
+    <.input field={@broadcast_transaction_form[:fee_rate]} type="text" min="0" value={@broadcast_transaction_form[:fee_rate].value || @recommended_fee} phx-debounce required/>
 
     <.label for="broadcast">
       Broadcast transaction
