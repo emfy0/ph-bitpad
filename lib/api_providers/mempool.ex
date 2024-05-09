@@ -1,6 +1,8 @@
 defmodule ApiProviders.Mempool do
   @url "https://mempool.space/testnet/api"
 
+  require Logger
+
   def addr_balance(address) do
     url = @url <> "/address/#{address}"
     case HTTPoison.get(url) do

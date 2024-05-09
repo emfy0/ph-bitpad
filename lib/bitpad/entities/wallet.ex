@@ -33,40 +33,11 @@ defmodule Bitpad.Entities.Wallet do
   end
 
   def fill_provider_attrs(wallet) do
-    wallet_with_balance =
-      Task.async(fn ->
-        wallet
-        |> fill_balance()
-      end)
-
-    wallet_with_transactions =
-      Task.async(fn ->
-        wallet
-        |> fill_transactions()
-      end)
-
-    wallet_with_utxos =
-      Task.async(fn ->
-        wallet
-        |> fill_utxos()
-        |> fill_next_transaction_bytes()
-      end)
-
-    [wallet_with_balance, wallet_with_transactions, wallet_with_utxos] =
-      [
-        wallet_with_balance,
-        wallet_with_transactions,
-        wallet_with_utxos
-      ]
-      |> Enum.map(&Task.await/1)
-
-
     wallet
-    |> Map.put(:balance, wallet_with_balance.balance)
-    |> Map.put(:usd_balance, Float.round(wallet_with_balance.usd_balance, 2))
-    |> Map.put(:transactions, wallet_with_transactions.transactions)
-    |> Map.put(:utxos, wallet_with_utxos.utxos)
-    |> Map.put(:next_transaction_bytes, wallet_with_utxos.next_transaction_bytes)
+    |> fill_balance()
+    |> fill_transactions()
+    |> fill_utxos()
+    |> fill_next_transaction_bytes()
   end
 
   def fill_balance(wallet) do

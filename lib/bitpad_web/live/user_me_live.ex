@@ -83,11 +83,9 @@ defmodule BitpadWeb.UserMeLive do
     wallets = WalletRepository.find_by_user(socket.assigns.current_user)
 
     wallets =
-      Task.async_stream(wallets, fn wallet ->
+      Enum.map(wallets, fn wallet ->
         Wallet.fill_provider_attrs(wallet)
       end)
-      |> Stream.map(fn {_, wallet} -> wallet end)
-      |> Enum.to_list()
 
     {
       :noreply,

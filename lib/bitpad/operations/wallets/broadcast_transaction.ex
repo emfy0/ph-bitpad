@@ -33,10 +33,9 @@ defmodule Bitpad.Operations.Wallets.BroadcastTransaction do
     utxo_ids = Mempool.utxo_ids_by_addr(wallet.address)
 
     utxos =
-      Task.async_stream(utxo_ids, fn utxo_id ->
+      Enum.map(utxo_ids, fn utxo_id ->
         Mempool.transaction_by_id(utxo_id)
       end)
-      |> Stream.map(fn {_, tx} -> tx end)
       |> Enum.uniq_by(fn tx -> tx["txid"] end)
 
     change_output_sctipt = create_output_sctipt_from_address(wallet.address)
