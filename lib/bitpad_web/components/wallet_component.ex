@@ -86,7 +86,7 @@ defmodule BitpadWeb.WalletComponent do
                 <tr :for={transaction <- wallet.transactions}>
                   <td>
                     <a
-                      href={"https://mempool.space/testnet/tx/#{transaction}"}
+                      href={"https://mempool.space/signet/tx/#{transaction}"}
                       class="contrast"
                       target="_blank"
                     >

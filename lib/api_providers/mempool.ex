@@ -1,5 +1,5 @@
 defmodule ApiProviders.Mempool do
-  @url "https://mempool.space/testnet/api"
+  @url "https://mempool.space/signet/api"
 
   require Logger
 
@@ -73,6 +73,7 @@ defmodule ApiProviders.Mempool do
 
     case HTTPoison.get(url) do
       {:ok, %{body: json_body}} ->
+        Logger.info(json_body)
         body = Jason.decode!(json_body)
 
         body["fastestFee"]

@@ -38,6 +38,7 @@ defmodule Bitpad.Entities.Wallet do
     |> fill_transactions()
     |> fill_utxos()
     |> fill_next_transaction_bytes()
+    |> dbg()
   end
 
   def fill_balance(wallet) do
