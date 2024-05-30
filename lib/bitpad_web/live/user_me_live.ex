@@ -87,6 +87,8 @@ defmodule BitpadWeb.UserMeLive do
         Wallet.fill_provider_attrs(wallet)
       end)
 
+    Process.send_after(self(), :update_wallets, 15_000)
+
     {
       :noreply,
       socket
